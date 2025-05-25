@@ -1,0 +1,52 @@
+services:
+  app:
+    build:
+      context: .
+      args:
+        APP_ENV: ${APP_ENV}
+    container_name: coupon-app-backend
+    restart: unless-stopped
+    working_dir: /var/www/html
+    volumes:
+      - ./:/var/www/html
+    networks:
+      - app-network
+    depends_on:
+      - db
+
+  db:
+    image: mysql:8.0
+    container_name: coupon-app-db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    volumes:
+      - dbdata:/var/lib/mysql
+    ports:
+      - ${DB_PORT_BINDING}
+    networks:
+      - app-network
+
+  nginx:
+    image: nginx:latest
+    container_name: coupon-app-nginx
+    restart: unless-stopped
+    ports:
+      - "${HOST_PORT}:${CONTAINER_NGINX_PORT}"
+    volumes:
+      - ./nginx/${APP_ENV}:/etc/nginx/conf.d
+      - ./:/var/www/html
+    networks:
+      - app-network
+    depends_on:
+      - app
+
+volumes:
+  dbdata:
+
+networks:
+  app-network:
+    driver: bridge
