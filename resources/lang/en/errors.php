@@ -23,7 +23,19 @@ return [
         'password_required' => 'Password is required.',
         'password_min' => 'Password must be at least 6 characters.',
         'password_max' => 'Password may not be greater than 80 characters.',
-        'password_regex' => 'Password must contain at least one letter and one number.',
+        'password_numbers' => 'Password must contain at least one lower case letter, one upper case letter and one number.',
+        'password_mixed' => 'Password must contain at least one lower case letter, one upper case letter and one number.',
         'password_confirmed' => 'Password confirmation does not match.',
+    ],
+    'login' => [
+        'email_required' => 'Invalid email or password.',
+        'email_email' => 'Invalid email address format.',
+        'email_max' => 'Invalid email or password.',
+        'email_exists' => 'This email address is not associated with any account.',
+
+        'password_required' => 'Invalid email or password.',
+        'password_max' => 'Invalid email or password.',
+
+        'incorrect_password' => 'Invalid email or password.',
     ],
 ];

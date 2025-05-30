@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use Exception;
-use Illuminate\Http\Request;
+use App\Models\User;
 use App\Services\AuthService;
 use App\Services\ErrorService;
 use Illuminate\Support\Facades\DB;
+use App\Http\Requests\LoginRequest;
+use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\RegisterRequest;
 
 class AuthController extends Controller
@@ -22,21 +24,44 @@ class AuthController extends Controller
 
 
     public function register(RegisterRequest $request) {
-        $data = $request->validated();
+        $requestData = $request->validated();
 
         try {
             DB::beginTransaction();
-            $user = $this->authService->createUser($data);
-            $token = $user->createToken('auth-token', ['*'], now()->addMonths(6))->plainTextToken;
+            $user = $this->authService->createUser($requestData);
+            $token = $this->authService->generateUserAuthToken($user);
 
             DB::commit();
             return response()->json([
-                'message' => __('messages.register.successfully_registered'),
                 'auth_token' => $token,
             ], 201);
         }
         catch(Exception $e) {
             DB::rollBack();
+            return $this->errorService->handleException($e);
+        }
+    }
+
+
+    public function login(LoginRequest $request) {
+        $requestData = $request->validated();
+
+        try {
+            $user = User::where('email', $requestData['email'])->first();
+
+            if(!Hash::check($requestData['password'], $user->password)) {
+                return response()->json(['errors' => [
+                    'error' => [__('errors.login.incorrect_password')],
+                ]], 422);
+            }
+
+            $token = $this->authService->generateUserAuthToken($user);
+
+            return response()->json([
+                'auth_token' => $token,
+            ], 200);
+        }
+        catch(Exception $e) {
             return $this->errorService->handleException($e);
         }
     }

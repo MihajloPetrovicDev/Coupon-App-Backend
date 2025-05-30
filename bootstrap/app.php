@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\DeleteExpiredTokens;
 use App\Http\Middleware\SetLocale;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -13,6 +14,7 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
+        $middleware->append(DeleteExpiredTokens::class);
         $middleware->append(SetLocale::class);
     })
     ->withExceptions(function (Exceptions $exceptions) {
