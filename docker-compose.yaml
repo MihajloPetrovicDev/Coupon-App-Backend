@@ -4,6 +4,7 @@ services:
       context: .
       args:
         APP_ENV: ${APP_ENV}
+    image: coupon-app-backend
     container_name: coupon-app-backend
     restart: unless-stopped
     working_dir: /var/www/html
