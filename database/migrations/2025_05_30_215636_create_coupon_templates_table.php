@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->unsignedBigInteger('coupon_type_id');
-            $table->decimal(8, 2)->nullable();
+            $table->decimal('value', 8, 2)->nullable();
             $table->boolean('is_global')->default(false);
             $table->text('description')->nullable();
             $table->timestamps();
