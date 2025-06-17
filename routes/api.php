@@ -15,3 +15,5 @@ Route::post('/register', [AuthController::class, 'register'])->middleware(ApiGue
 Route::post('/login', [AuthController::class, 'login'])->middleware(ApiGuest::class);
 
 Route::get('/user/coupons', [CouponController::class, 'getUserCoupons'])->middleware('auth:sanctum');
+
+Route::delete('/user/auth-token', [AuthController::class, 'deleteUserAuthToken'])->middleware('auth:sanctum');

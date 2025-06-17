@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class AuthService
@@ -19,5 +20,10 @@ class AuthService
 
     public function generateUserAuthToken(User $user) {
         return $user->createToken('auth-token', [], now()->addMonths(6))->plainTextToken;
+    }
+
+
+    public function deleteUserAuthToken(User $user) {
+        return $user->currentAccessToken()->delete();
     }
 }

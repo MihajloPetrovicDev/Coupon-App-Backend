@@ -8,6 +8,7 @@ use App\Services\AuthService;
 use App\Services\ErrorService;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\LoginRequest;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\RegisterRequest;
 
@@ -60,6 +61,18 @@ class AuthController extends Controller
             return response()->json([
                 'auth_token' => $token,
             ], 200);
+        }
+        catch(Exception $e) {
+            return $this->errorService->handleException($e);
+        }
+    }
+
+
+    public function deleteUserAuthToken() {
+        try {
+            $this->authService->deleteUserAuthToken(Auth::user());
+
+            return response()->json([], 200);
         }
         catch(Exception $e) {
             return $this->errorService->handleException($e);
